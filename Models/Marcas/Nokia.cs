@@ -1,4 +1,4 @@
-namespace DesafioPOO.Models
+namespace DesafioPOO.Models.Marcas
 {
     // TODO: Herdar da classe "Smartphone"
     public class Nokia
