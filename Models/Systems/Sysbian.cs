@@ -14,13 +14,10 @@ namespace DesafioPOO.Models.Systems
 		//
 		// CONSTRUTORES
 		//
-		public Sysbian(string numero, string modelo) : base(numero, modelo)
+		public Sysbian(string modelo) : base(modelo)
 		{
 		}
 		
-		public Sysbian()
-		{
-		}
 		//
 		// MÉTODOS
 		//
@@ -38,9 +35,9 @@ namespace DesafioPOO.Models.Systems
 
 		public override void ExecutarAplicativo(string nomeApp)
 		{
-			if(Apps.Contains(nomeApp))
+			if(Apps.Contains(nomeApp.ToLower()))
 			{
-				switch(nomeApp)
+				switch(nomeApp.ToLower())
 				{
 					case "Calculadora":
 						calculadora.Executar();
@@ -60,5 +57,18 @@ namespace DesafioPOO.Models.Systems
 			
 		}
 
+		public override void Ligar()
+		{
+			if(!Apps.Contains("Mensagens"))
+			{
+				Console.WriteLine("Aplicativo 'Mensagens' não está instalado no seu Smartphone!");
+				return;
+			}
+			string contato = mensagens.SelecionarContato();
+			if(contato != String.Empty)
+			{
+				Console.WriteLine("Você ligou para {0}!", contato);
+			}
+		}
 	}
 }

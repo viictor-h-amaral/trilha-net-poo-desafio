@@ -7,7 +7,7 @@ namespace DesafioPOO.Models
 		//
 		// NÚMERO
 		//
-		private string _numero;
+		private string _numero = String.Empty;
 		public string Numero { 
 			get
 			{
@@ -15,7 +15,7 @@ namespace DesafioPOO.Models
 			}
 			set
 			{
-				string padraoNumero = @"^(\d{2})\9\d{4}-\d{4}$";
+				string padraoNumero = @"^\(\d{2}\)[9]\d{4}\-\d{4}$";
 				bool numeroNoPadrao = Regex.IsMatch(value, padraoNumero, RegexOptions.None, TimeSpan.FromSeconds(2));
 				try
 				{
@@ -43,7 +43,7 @@ namespace DesafioPOO.Models
 		//
 		// MODELO
 		//
-		private string _modelo;
+		private string _modelo = String.Empty;
 		public string Modelo { 
 			get
 			{
@@ -95,36 +95,30 @@ namespace DesafioPOO.Models
 		//
 		// LISTA DE APPS
 		//
-		private List<string> _apps;
-		public List<string> Apps { 
-			get
-			{
-				return _apps;
-			}
-		}
+		public List<string> Apps { get;set; } = [];
 		//
 		// CONSTRUTORES
 		//
-		public Smartphone(string numero, string modelo)
+		public Smartphone(string modelo)
 		{
-			Numero = numero;
+			bool loopNumero = true;
+			while(loopNumero)
+			{
+				try
+				{
+					Console.WriteLine("Digite o número do Smartphone (formato '(00)90000-0000'): ");
+					Numero = Console.ReadLine();
+					
+					loopNumero = false;
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine("Erro! : " + ex.Message);
+				}
+			}
+			
 			_imei = GeraIMEI();
 			Modelo = modelo;
-			
-			Dictionary<string, int> processamento = NovoProcess();
-			_processamento = processamento;
-			// TODO: Passar os parâmetros do construtor para as propriedades
-		}
-		
-		public Smartphone()
-		{
-			Console.WriteLine("Digite o número do Smartphone (formato '(00)90000-0000'): ");
-			Numero = Console.ReadLine();
-			
-			_imei = GeraIMEI();
-			
-			Console.WriteLine("Digite o modelo do Smartphone: ");
-			Modelo = Console.ReadLine();
 			
 			Dictionary<string, int> processamento = NovoProcess();
 			_processamento = processamento;
@@ -134,29 +128,35 @@ namespace DesafioPOO.Models
 		//
 		private static Dictionary<string, int> NovoProcess()
 		{
-			Dictionary<string, int> novoProcess = new();
-			try
+			while(true)
 			{
-				Console.WriteLine("Digite o número de MB da memória RAM: ");
-				novoProcess["Memória RAM"] = Convert.ToInt32(Console.ReadLine());
-						
-				Console.WriteLine("Digite o número de núcleos do processador: ");
-				novoProcess["Núcleos"] = Convert.ToInt32(Console.ReadLine());
-				
-				Console.WriteLine("Digite o número de GB do seu armazenamento: ");
-				novoProcess["Armazenamento"] = Convert.ToInt32(Console.ReadLine());
-			}
-			catch (FormatException)
-			{
-				Console.WriteLine("\n Erro! : Digite um número inteiro!");
-			}	
-			catch (Exception ex)
-			{
-				Console.WriteLine("\n Erro! : " + ex.Message);
+				Dictionary<string, int> novoProcess = new();
+				try
+				{
+					Console.WriteLine("Digite o número de MB da memória RAM: ");
+					novoProcess["Memória RAM"] = Convert.ToInt32(Console.ReadLine());
+							
+					Console.WriteLine("Digite o número de núcleos do processador: ");
+					novoProcess["Núcleos"] = Convert.ToInt32(Console.ReadLine());
+					
+					Console.WriteLine("Digite o número de GB do seu armazenamento: ");
+					novoProcess["Armazenamento"] = Convert.ToInt32(Console.ReadLine());
+					
+					return novoProcess;
+				}
+				catch (FormatException)
+				{
+					Console.WriteLine("\n Erro! : Digite um número inteiro!");
+				}	
+				catch (Exception ex)
+				{
+					Console.WriteLine("\n Erro! : " + ex.Message);
+				}
 			}
 			
-			return novoProcess;
+			
 		}
+		
 		private static int GeraIMEI()
 		{
 			Random gerador = new Random();
@@ -167,12 +167,13 @@ namespace DesafioPOO.Models
 		
 		public void AddApp(string novoApp)
 		{
-			switch(novoApp)
+			switch(novoApp.ToLower())
 			{
-				case "Calculadora":
-				case "Dicionario":
-				case "Mensagens":
-					Apps.Add(novoApp);
+				case "calculadora":
+				case "dicionario":
+				case "dicionário":
+				case "mensagens":
+					Apps.Add(novoApp.ToLower());
 					InstalarAplicativo(novoApp);
 					break;
 				default:
@@ -185,15 +186,7 @@ namespace DesafioPOO.Models
 		
 		public abstract void ExecutarAplicativo(string nomeApp);
 		
-		public void Ligar()
-		{
-			Console.WriteLine("Ligando...");
-		}
-
-		public void ReceberLigacao()
-		{
-			Console.WriteLine("Recebendo ligação...");
-		}
+		public abstract void Ligar();
 
 	}
 }

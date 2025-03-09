@@ -12,13 +12,17 @@ namespace DesafioPOO.Models.Systems
 	// TODO: Herdar da classe "Smartphone"
 	public abstract class Iphone : Smartphone
 	{
-		public Iphone(string numero, string modelo) : base(numero, modelo)
+		public Iphone(string modelo) : base(modelo)
 		{
 		}
 		
-		public Iphone()
-		{
-		}
+		
+		Dicionario_Iphone dicionario = new();
+		
+		Calculadora_Iphone calculadora = new();
+
+		Mensagens_Iphone mensagens = new();
+		
 		// TODO: Sobrescrever o método "InstalarAplicativo"
 		public override void InstalarAplicativo(string nomeApp)
 		{
@@ -27,9 +31,9 @@ namespace DesafioPOO.Models.Systems
 
 		public override void ExecutarAplicativo(string nomeApp)
 		{
-			if(Apps.Contains(nomeApp))
+			if(Apps.Contains(nomeApp.ToLower()))
 			{
-				switch(nomeApp)
+				switch(nomeApp.ToLower())
 				{
 					case "Calculadora":
 						Calculadora_Iphone calculadora = new();
@@ -52,5 +56,29 @@ namespace DesafioPOO.Models.Systems
 			
 		}
 
+		public override void Ligar()
+		{
+			if(!Apps.Contains("Mensagens"))
+			{
+				Console.WriteLine("Aplicativo 'Mensagens' não está instalado no seu Smartphone!");
+				return;
+			}
+			string contato = mensagens.SelecionarContato();
+			if(contato != String.Empty)
+			{
+				Random gerador = new Random();
+				int num = gerador.Next(1,100);
+				
+				if(num % 5 == 0)
+				{
+					Console.WriteLine("Chamada não atendida! Deixe um recado: ");
+					mensagens.EnviarMensagem();
+				}
+				else
+				{
+					Console.WriteLine("Você ligou para {0}!", contato);
+				}
+			}
+		}
 	}
 }

@@ -12,13 +12,16 @@ namespace DesafioPOO.Models.Systems
 {
 	public abstract class Android : Smartphone
 	{
-		public Android(string numero, string modelo) : base(numero, modelo)
+		public Android(string modelo) : base(modelo)
 		{
 		}
 		
-		public Android()
-		{
-		}
+		
+		Dicionario_Android dicionario = new();
+		
+		Calculadora_Android calculadora = new();
+
+		Mensagens_Android mensagens = new();
 		
 		public override void InstalarAplicativo(string nomeApp)
 		{
@@ -27,9 +30,9 @@ namespace DesafioPOO.Models.Systems
 
 		public override void ExecutarAplicativo(string nomeApp)
 		{
-			if(Apps.Contains(nomeApp))
+			if(Apps.Contains(nomeApp.ToLower()))
 			{
-				switch(nomeApp)
+				switch(nomeApp.ToLower())
 				{
 					case "Calculadora":
 						Calculadora_Android calculadora = new();
@@ -50,6 +53,31 @@ namespace DesafioPOO.Models.Systems
 				Console.WriteLine("App não instalado!");
 			}
 			
+		}
+	
+		public override void Ligar()
+		{
+			if(!Apps.Contains("Mensagens"))
+			{
+				Console.WriteLine("Aplicativo 'Mensagens' não está instalado no seu Smartphone!");
+				return;
+			}
+			string contato = mensagens.SelecionarContato();
+			if(contato != String.Empty)
+			{
+				Random gerador = new Random();
+				int num = gerador.Next(1,100);
+				
+				if(num % 5 == 0)
+				{
+					Console.WriteLine("Chamada não atendida! Deixe um recado: ");
+					mensagens.EnviarMensagem();
+				}
+				else
+				{
+					Console.WriteLine("Você ligou para {0}!", contato);
+				}
+			}
 		}
 	}
 }
